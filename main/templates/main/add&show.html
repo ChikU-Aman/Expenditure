@@ -1,0 +1,65 @@
+{% extends 'main/base.html' %}
+{% block content %}
+<div class="row">
+    <div class="col-sm-4">
+        <h4 class="text-center alert alert-info">Add New Record</h4>
+        <form action="" method="POST">
+            {% csrf_token %}
+            {{form.as_p}}
+            <input type="submit" class="btn btn-success" value="Add">
+        </form>
+        <form action="{% url 'excel' %}" method="POST">
+          {% csrf_token %}
+          <input type="submit" class="btn btn-success" value="Export CSV">
+      </form>
+    </div>
+    <div class="col-sm-8">
+        <h4 class="text-center alert alert-info">Show Expense</h4>
+        {% if al %}
+        <h4> Table Data</h4>
+        <table class="table caption-top">
+            <caption>List of Expense</caption>
+            <thead class="table-dark">
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Date</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Note</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for i in al %}
+              <tr>
+                <th scope="row">{{i.id}}</th>
+                <td>{{i.name}}</td>
+                <td>{{i.date}}</td>
+                <td>{{i.amount}}</td>
+                <td>{{i.note}}</td>
+                <td> 
+                <a href="{% url 'updatedata' i.id %}" class="btn btn-warning btn-sm">Edit</a>
+                <form action="{% url 'deletedata' i.id %}" method="POST" class="d-inline">
+                    {% csrf_token %}
+                    <input type="submit" class="btn btn-danger"
+                    value="Delete">
+                </form>
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+            <h4 class="text-center alert alert-warning">Aman</h4>
+        {% endif %}
+        {% if s and f %}
+        <form action="" method="POST" class="text-center alert alert-info">
+          {% csrf_token %}
+          <input type="submit" class="btn btn-danger"
+          value="GET SUM">
+      </form>
+      {% else %}
+      <h4 class="text-center">Total Expenditure = RS. {{s}}/- only</h3>
+      {%endif%}
+    </div>
+</div>
+{% endblock content%}
